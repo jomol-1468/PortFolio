@@ -27,6 +27,7 @@
     --font-body: 'Poppins', sans-serif;
     --font-code: 'JetBrains Mono', monospace;
     --maxw: 1120px;
+    --nav-h: 76px;
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -40,6 +41,7 @@
     overflow-x:hidden;
     position:relative;
   }
+  body.lock{overflow:hidden; height:100vh;}
 
   /* starfield + blobs */
   .stars{
@@ -83,97 +85,120 @@
 
   /* ---------- NAV ---------- */
   header.site-nav{
-    position:sticky; top:0; z-index:50;
+    position:sticky; top:0; z-index:100;
+    height:var(--nav-h);
+    display:flex; align-items:center;
     background:rgba(11,6,22,0.72);
     backdrop-filter:blur(14px);
     border-bottom:1px solid var(--border-soft);
   }
   .nav-inner{
-    max-width:var(--maxw); margin:0 auto; padding:18px 32px;
+    width:100%;
+    max-width:var(--maxw); margin:0 auto; padding:0 32px;
     display:flex; align-items:center; justify-content:space-between;
   }
   .logo{
     font-family:var(--font-display); font-weight:800; font-size:19px;
     color:var(--text); display:flex; align-items:center; gap:10px;
     border:1.5px solid var(--border); border-radius:8px; padding:4px 10px;
+    background:none; cursor:pointer;
   }
   .logo span{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
-  nav.links{display:flex; gap:34px;}
+  nav.links{display:flex; gap:8px;}
   nav.links a{
     display:flex; align-items:center; gap:7px;
     font-size:14.5px; font-weight:500; color:var(--text-muted);
-    transition:color .15s;
+    transition:color .15s, background .15s;
+    padding:9px 14px; border-radius:8px;
   }
   nav.links a svg{width:16px; height:16px; stroke:currentColor;}
-  nav.links a:hover{color:var(--text);}
+  nav.links a:hover{color:var(--text); background:var(--bg-panel-alt);}
+  nav.links a.active{color:var(--text); background:var(--bg-panel-alt); box-shadow:inset 0 0 0 1px var(--border);}
   .nav-cta{
     font-family:var(--font-code); font-size:12.5px;
     background:var(--grad); color:#0B0616; font-weight:700;
     padding:9px 18px; border-radius:8px; transition:transform .15s, box-shadow .15s;
   }
   .nav-cta:hover{transform:translateY(-1px); box-shadow:0 8px 24px -8px rgba(227,92,255,0.6);}
+  .nav-toggle{
+    display:none; background:none; border:1.5px solid var(--border); color:var(--text);
+    border-radius:8px; padding:8px 10px; cursor:pointer;
+  }
+  .nav-toggle svg{width:20px; height:20px; stroke:currentColor;}
 
-  /* ---------- HERO ---------- */
-  .hero{padding:90px 0 80px; position:relative;}
+  /* ---------- PAGES ---------- */
+  main{position:relative; z-index:1;}
+  .page{display:none;}
+  .page.active{display:block; animation:fadein .35s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  /* HOME: fills viewport, no scroll */
+  #page-home.active{
+    display:flex; align-items:center;
+    min-height:calc(100vh - var(--nav-h));
+  }
+  .hero{padding:36px 0; width:100%;}
   .hero-grid{display:grid; grid-template-columns:1.15fr 0.85fr; gap:40px; align-items:center;}
-  .hero .greet{font-size:26px; font-weight:500; color:var(--text-muted); display:flex; align-items:center; gap:10px; margin-bottom:10px;}
+  .hero .greet{font-size:clamp(18px,2.4vw,26px); font-weight:500; color:var(--text-muted); display:flex; align-items:center; gap:10px; margin-bottom:8px;}
   .wave{display:inline-block; animation:wave 2.2s infinite;}
   @keyframes wave{0%,60%,100%{transform:rotate(0);} 10%,30%{transform:rotate(14deg);} 20%{transform:rotate(-8deg);} 40%{transform:rotate(10deg);}}
   .hero h1{
     font-family:var(--font-display); font-weight:800;
-    font-size:clamp(34px, 4.6vw, 52px);
-    line-height:1.15; margin-bottom:22px;
+    font-size:clamp(28px, 4.2vw, 48px);
+    line-height:1.15; margin-bottom:16px;
   }
   .hero h1 .accent{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
   .typed-row{
     font-family:var(--font-display); font-weight:700;
-    font-size:clamp(22px, 2.8vw, 30px);
+    font-size:clamp(19px, 2.4vw, 27px);
     color:var(--accent-pink);
-    min-height:44px; margin-bottom:26px;
+    min-height:40px; margin-bottom:18px;
     display:flex; align-items:center;
   }
-  .typed-cursor{display:inline-block; width:3px; height:28px; background:var(--accent-cyan); margin-left:4px; animation:blink 0.9s step-end infinite;}
+  .typed-cursor{display:inline-block; width:3px; height:24px; background:var(--accent-cyan); margin-left:4px; animation:blink 0.9s step-end infinite;}
   @keyframes blink{50%{opacity:0;}}
-  .hero p.desc{color:var(--text-muted); font-size:16px; max-width:480px; margin-bottom:34px;}
+  .hero p.desc{color:var(--text-muted); font-size:15.5px; max-width:460px; margin-bottom:26px;}
   .cta-row{display:flex; gap:16px; flex-wrap:wrap;}
   .btn{
     font-size:14.5px; font-weight:600;
-    padding:14px 26px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;
-    transition:all .15s;
+    padding:13px 24px; border-radius:10px; display:inline-flex; align-items:center; gap:8px;
+    transition:all .15s; cursor:pointer; border:none; font-family:var(--font-body);
   }
-  .btn-primary{background:var(--grad); color:#0B0616; border:none;}
+  .btn-primary{background:var(--grad); color:#0B0616;}
   .btn-primary:hover{transform:translateY(-2px); box-shadow:0 12px 30px -10px rgba(227,92,255,0.55);}
-  .btn-ghost{border:1.5px solid var(--border); color:var(--text);}
+  .btn-ghost{border:1.5px solid var(--border); color:var(--text); background:none;}
   .btn-ghost:hover{border-color:var(--accent-cyan); color:var(--accent-cyan);}
 
-  /* floating photo */
   .avatar-wrap{position:relative; display:flex; justify-content:center; align-items:center;}
   .avatar-ring{
-    position:absolute; width:340px; height:340px; border-radius:50%;
+    position:absolute; width:300px; height:300px; border-radius:50%;
     background:conic-gradient(from 0deg, var(--accent-violet), var(--accent-pink), var(--accent-cyan), var(--accent-violet));
     filter:blur(2px); opacity:0.55; animation:spin 12s linear infinite;
   }
   @keyframes spin{to{transform:rotate(360deg);}}
   .avatar-card{
-    position:relative; width:300px; height:300px; border-radius:50%;
+    position:relative; width:264px; height:264px; border-radius:50%;
     overflow:hidden; border:5px solid var(--bg-panel);
     box-shadow:0 30px 70px -20px rgba(139,92,246,0.5);
     animation:float 4.5s ease-in-out infinite;
   }
-  @keyframes float{0%,100%{transform:translateY(0);} 50%{transform:translateY(-14px);}}
+  @keyframes float{0%,100%{transform:translateY(0);} 50%{transform:translateY(-12px);}}
   .avatar-card img{width:100%; height:100%; object-fit:cover; object-position:center top;}
   .avatar-badge{
-    position:absolute; bottom:6px; right:calc(50% - 150px + 10px);
+    position:absolute; bottom:6px; right:calc(50% - 132px + 6px);
     display:flex; align-items:center; gap:6px;
     background:var(--bg-panel); border:1px solid var(--border); border-radius:20px;
-    padding:7px 14px; font-family:var(--font-code); font-size:11.5px; color:var(--accent-cyan);
+    padding:6px 13px; font-family:var(--font-code); font-size:11px; color:var(--accent-cyan);
     box-shadow:0 10px 24px -8px rgba(0,0,0,0.5);
   }
   .avatar-badge .pip{width:7px; height:7px; border-radius:50%; background:#3EE68C; box-shadow:0 0 8px #3EE68C;}
+  .scroll-hint{
+    display:none;
+  }
 
-  /* ---------- SECTION SHELL ---------- */
-  section{padding:80px 0; border-top:1px solid var(--border-soft); position:relative;}
-  .section-head{margin-bottom:46px; text-align:center;}
+  /* ---------- non-home pages ---------- */
+  .page:not(#page-home){padding:56px 0 80px; min-height:calc(100vh - var(--nav-h));}
+  .section-head{margin-bottom:44px; text-align:center;}
   .section-head h2{font-family:var(--font-display); font-size:clamp(26px,3.2vw,36px); font-weight:800;}
   .section-head h2 .accent{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
   .section-head .sub{color:var(--text-muted); font-size:15px; margin-top:10px; max-width:560px; margin-left:auto; margin-right:auto;}
@@ -181,52 +206,50 @@
   /* ---------- ABOUT ---------- */
   .about-grid{display:grid; grid-template-columns:1.2fr 0.8fr; gap:56px; align-items:center; text-align:left;}
   .about-grid p{color:var(--text-muted); font-size:16px; margin-bottom:20px; line-height:1.75;}
-  .about-grid p b, .about-grid p em{color:var(--accent-pink); font-weight:600; font-style:normal;}
+  .about-grid p b{color:var(--accent-pink); font-weight:600;}
   .about-photo{
-    width:100%; max-width:320px; margin:0 auto; aspect-ratio:1/1; border-radius:50%;
+    width:100%; max-width:300px; margin:0 auto; aspect-ratio:1/1; border-radius:50%;
     overflow:hidden; border:5px solid var(--bg-panel);
     box-shadow:0 30px 70px -20px rgba(227,92,255,0.4);
   }
   .about-photo img{width:100%; height:100%; object-fit:cover; object-position:center top;}
   .fact-list{display:flex; flex-direction:column; gap:0; margin-top:8px;}
   .fact{display:flex; justify-content:space-between; gap:16px; padding:13px 0; border-bottom:1px solid var(--border-soft); font-size:14px;}
-  .fact .k{font-family:var(--font-code); color:var(--text-dim);}
+  .fact .k{font-family:var(--font-code); color:var(--text-dim); white-space:nowrap;}
   .fact .v{color:var(--text); text-align:right;}
 
-  /* find me on */
   .findme{text-align:center; margin-top:60px;}
-  .findme h3{font-family:var(--font-display); font-size:24px; font-weight:800; margin-bottom:8px;}
-  .findme p{color:var(--text-muted); font-size:14.5px; margin-bottom:26px;}
+  .findme h3{font-family:var(--font-display); font-size:22px; font-weight:800; margin-bottom:8px;}
+  .findme p{color:var(--text-muted); font-size:14.5px; margin-bottom:24px;}
   .social-row{display:flex; justify-content:center; gap:18px;}
   .social-icon{
-    width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    width:50px; height:50px; border-radius:50%; display:flex; align-items:center; justify-content:center;
     background:var(--bg-panel); border:1.5px solid var(--border); transition:all .2s;
   }
-  .social-icon svg{width:22px; height:22px; stroke:var(--text-muted); transition:stroke .2s;}
+  .social-icon svg{width:21px; height:21px; stroke:var(--text-muted); transition:stroke .2s;}
   .social-icon:hover{border-color:var(--accent-pink); transform:translateY(-4px);}
   .social-icon:hover svg{stroke:var(--accent-pink);}
 
-  /* ---------- STACK ---------- */
-  .layers{display:flex; flex-direction:column; gap:12px; max-width:800px; margin:0 auto;}
+  .layers{display:flex; flex-direction:column; gap:12px; max-width:800px; margin:44px auto 0;}
   .layer{
     background:var(--bg-panel);
     border:1px solid var(--border);
     border-left:3px solid var(--layer-color, var(--accent-violet));
     border-radius:10px;
-    padding:17px 22px;
+    padding:16px 20px;
     display:grid;
-    grid-template-columns:210px 1fr;
+    grid-template-columns:200px 1fr;
     gap:18px;
     align-items:center;
     transition:transform .15s, border-color .15s;
   }
   .layer:hover{transform:translateX(4px); border-left-color:var(--accent-pink);}
   .layer .instr{
-    font-family:var(--font-code); font-size:13px; color:var(--layer-color, var(--accent-violet));
+    font-family:var(--font-code); font-size:12.5px; color:var(--layer-color, var(--accent-violet));
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .layer .instr .kw{color:var(--accent-pink); font-weight:600;}
-  .layer .payload{font-size:14.5px; color:var(--text-muted);}
+  .layer .payload{font-size:14px; color:var(--text-muted);}
   .layer .payload b{color:var(--text); font-weight:600;}
 
   /* ---------- PROJECTS ---------- */
@@ -253,7 +276,25 @@
   .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:2px;}
   .tag{font-family:var(--font-code); font-size:11.5px; color:var(--accent-pink); background:rgba(227,92,255,0.08); border:1px solid rgba(227,92,255,0.28); padding:4px 10px; border-radius:12px;}
 
-  /* ---------- EXPERIENCE ---------- */
+  /* ---------- RESUME ---------- */
+  .resume-top{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:16px;
+    margin-bottom:56px;
+  }
+  .resume-download{
+    display:inline-flex; align-items:center; gap:10px;
+    background:var(--grad); color:#0B0616; font-weight:700; font-size:15px;
+    padding:15px 28px; border-radius:10px; transition:transform .15s, box-shadow .15s;
+  }
+  .resume-download:hover{transform:translateY(-2px); box-shadow:0 14px 32px -10px rgba(227,92,255,0.55);}
+  .resume-view{
+    display:inline-flex; align-items:center; gap:10px;
+    border:1.5px solid var(--border); color:var(--text); font-weight:600; font-size:15px;
+    padding:14px 26px; border-radius:10px; transition:all .15s;
+  }
+  .resume-view:hover{border-color:var(--accent-cyan); color:var(--accent-cyan);}
+  .resume-view svg, .resume-download svg{width:18px; height:18px; stroke:currentColor;}
+
   .gitlog{max-width:800px; margin:0 auto; position:relative; text-align:left;}
   .gitlog::before{content:""; position:absolute; left:6px; top:8px; bottom:8px; width:1px; background:var(--border);}
   .commit{position:relative; padding-left:34px; padding-bottom:36px;}
@@ -270,8 +311,7 @@
   .commit ul{margin-top:6px; padding-left:18px;}
   .commit li{color:var(--text-muted); font-size:14px; margin-bottom:3px;}
 
-  /* ---------- EXTRA ---------- */
-  .extra-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .extra-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px; max-width:800px; margin:56px auto 0;}
   .extra-card{background:var(--bg-panel); border:1px solid var(--border); border-radius:12px; padding:26px; text-align:left;}
   .extra-card h3{font-family:var(--font-display); font-size:17px; margin-bottom:14px; color:var(--text);}
   .extra-card p{color:var(--text-muted); font-size:14px; margin-bottom:4px;}
@@ -288,8 +328,9 @@
     padding:48px;
     display:grid; grid-template-columns:1.1fr 1fr; gap:40px; align-items:center;
     text-align:left;
+    max-width:900px; margin:0 auto;
   }
-  .contact-panel h2{font-family:var(--font-display); font-size:30px; font-weight:800; margin-bottom:12px;}
+  .contact-panel h2{font-family:var(--font-display); font-size:28px; font-weight:800; margin-bottom:12px;}
   .contact-panel p{color:var(--text-muted); font-size:15px; max-width:400px;}
   .contact-list{display:flex; flex-direction:column; gap:14px;}
   .contact-row{
@@ -305,7 +346,7 @@
   }
   .copy-btn:hover{border-color:var(--accent-pink); color:var(--accent-pink);}
 
-  footer{padding:32px 0 44px; text-align:center; font-family:var(--font-code); font-size:12px; color:var(--text-dim); position:relative; z-index:1;}
+  footer{padding:26px 0; text-align:center; font-family:var(--font-code); font-size:12px; color:var(--text-dim); position:relative; z-index:1; border-top:1px solid var(--border-soft);}
 
   @media (prefers-reduced-motion: reduce){
     *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
@@ -313,24 +354,42 @@
   }
 
   @media (max-width:860px){
-    nav.links{display:none;}
-    .hero-grid{grid-template-columns:1fr; gap:44px; text-align:center;}
+    nav.links{
+      display:none;
+      position:fixed; top:var(--nav-h); left:0; right:0;
+      background:rgba(11,6,22,0.97); backdrop-filter:blur(14px);
+      border-bottom:1px solid var(--border-soft);
+      flex-direction:column; gap:4px; padding:14px 20px 20px;
+      z-index:99;
+    }
+    nav.links.open{display:flex;}
+    nav.links a{padding:13px 14px;}
+    .nav-toggle{display:inline-flex; align-items:center; justify-content:center;}
+
+    #page-home.active{min-height:calc(100vh - var(--nav-h)); align-items:center;}
+    .hero-grid{grid-template-columns:1fr; gap:28px; text-align:center;}
     .hero p.desc{margin-left:auto; margin-right:auto;}
     .cta-row{justify-content:center;}
+    .avatar-card{width:180px; height:180px;}
+    .avatar-ring{width:210px; height:210px;}
+    .hero{padding:20px 0;}
+
     .about-grid{grid-template-columns:1fr; gap:32px; text-align:center;}
     .about-grid p{text-align:left;}
     .projects{grid-template-columns:1fr;}
     .extra-grid{grid-template-columns:1fr;}
     .layer{grid-template-columns:1fr; gap:6px;}
-    .contact-panel{grid-template-columns:1fr; padding:30px; text-align:center;}
+    .contact-panel{grid-template-columns:1fr; padding:28px; text-align:center;}
     .contact-panel p{margin:0 auto;}
   }
   @media (max-width:480px){
     .wrap{padding:0 20px;}
-    .hero{padding:52px 0 44px;}
-    .avatar-card{width:220px; height:220px;}
-    .avatar-ring{width:250px; height:250px;}
+    .avatar-card{width:150px; height:150px;}
+    .avatar-ring{width:178px; height:178px;}
     .cta-row{flex-direction:column; align-items:stretch;}
+  }
+  @media (max-height:700px){
+    #page-home.active{align-items:flex-start; padding-top:8px;}
   }
 </style>
 </head>
@@ -342,51 +401,59 @@
 
 <header class="site-nav">
   <div class="nav-inner">
-    <div class="logo">J<span>K</span></div>
-    <nav class="links">
-      <a href="#top"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Home</a>
-      <a href="#profile"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>About</a>
-      <a href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Projects</a>
-      <a href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>Contact</a>
+    <button class="logo" data-page="home" onclick="return false;">J<span>K</span></button>
+    <nav class="links" id="navLinks">
+      <a href="#" data-page="home" class="active"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Home</a>
+      <a href="#" data-page="about"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>About</a>
+      <a href="#" data-page="projects"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>Projects</a>
+      <a href="#" data-page="resume"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6M9 9h1"/></svg>Resume</a>
+      <a href="#" data-page="contact"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>Contact</a>
     </nav>
-    <a class="nav-cta" href="#contact">Let's talk</a>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <a class="nav-cta" href="#" data-page="contact">Let's talk</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
 <main>
 
-  <!-- HERO -->
-  <section class="hero" style="border-top:none;" id="top">
-    <div class="wrap hero-grid">
-      <div>
-        <div class="greet">Hi There! <span class="wave">👋</span></div>
-        <h1>I'M <span class="accent">JOMOL JOSE</span></h1>
-        <div class="typed-row"><span id="typedText"></span><span class="typed-cursor"></span></div>
-        <p class="desc">I design and build scalable web applications end to end — REST APIs in Django and Flask, interfaces in React, and lately, AI-powered backends. Based in Kerala, India.</p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="#projects">View Projects →</a>
-          <a class="btn btn-ghost" href="#contact">Contact Me</a>
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="greet">Hi There! <span class="wave">👋</span></div>
+          <h1>I'M <span class="accent">JOMOL JOSE</span></h1>
+          <div class="typed-row"><span id="typedText"></span><span class="typed-cursor"></span></div>
+          <p class="desc">I design and build scalable web applications end to end — REST APIs in Django and Flask, interfaces in React, and lately, AI-powered backends. Based in Kerala, India.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#" data-page="projects">View Projects →</a>
+            <a class="btn btn-ghost" href="#" data-page="contact">Contact Me</a>
+          </div>
         </div>
-      </div>
-      <div class="avatar-wrap">
-        <div class="avatar-ring"></div>
-        <div class="avatar-card">
-          <img src="profile.jpg" alt="Portrait of Jomol Jose">
+        <div class="avatar-wrap">
+          <div class="avatar-ring"></div>
+          <div class="avatar-card">
+            <img src="profile.jpg" alt="Portrait of Jomol Jose">
+          </div>
+          <div class="avatar-badge"><span class="pip"></span>open to work</div>
         </div>
-        <div class="avatar-badge"><span class="pip"></span>open to work</div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- ABOUT -->
-  <section id="profile">
+  <div class="page" id="page-about">
     <div class="wrap">
       <div class="section-head">
         <h2>LET ME <span class="accent">INTRODUCE</span> MYSELF</h2>
       </div>
       <div class="about-grid">
         <div>
-         <p>I fell in love with the moment an API call actually returns what it's supposed to — and I've been chasing that feeling since my first Django CRUD app. These days it's less "does it run" and more "does it scale, stay secure, and not fall over at 2am." 🧑‍💻</p>
+          <p>I fell in love with the moment an API call actually returns what it's supposed to — and I've been chasing that feeling since my first Django CRUD app. These days it's less "does it run" and more "does it scale, stay secure, and not fall over at 2am." 🧑‍💻</p>
           <p>I'm fluent in the languages that do the heavy lifting — <b>Python, Java, JavaScript, TypeScript, HTML5, and CSS3</b> — and I reach for whichever one actually fits the problem instead of forcing a favorite.</p>
           <p>On the frontend, I build interfaces in <b>React.js and Next.js</b>, styled with <b>Tailwind CSS and Bootstrap</b>, that stay responsive without feeling like an afterthought. On the backend, I ship REST APIs with <b>Django, Django REST Framework, Flask, FastAPI, Node.js, and Express.js</b>, backed by <b>MongoDB, MySQL, PostgreSQL, or SQLite</b> depending on what the data actually needs.</p>
           <p>Everything ships through <b>Git and GitHub</b>, gets tested with <b>Postman and Jest</b>, and increasingly runs alongside <b>AI-powered backends</b> — I'm actively growing into NLP and deep-learning models, because that's where full-stack development is heading, and I'd rather build with it early than catch up later.</p>
@@ -402,31 +469,6 @@
         </div>
       </div>
 
-      <div class="findme">
-        <h3>FIND ME ON</h3>
-        <p>Feel free to <span style="color:var(--accent-pink)">connect</span> with me</p>
-        <div class="social-row">
-          <a class="social-icon" href="https://github.com/jomol-1468" target="_blank" rel="noopener" aria-label="GitHub">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-          </a>
-          <a class="social-icon" href="https://linkedin.com/in/jomol-jose-76570233a" target="_blank" rel="noopener" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          </a>
-          <a class="social-icon" href="mailto:josejomol0@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- STACK -->
-  <section id="stack">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>MY <span class="accent">TOOLCHAIN</span></h2>
-        <p class="sub">The layers I actually build with, from the language up to the tools that ship it.</p>
-      </div>
       <div class="layers">
         <div class="layer" style="--layer-color:#B3A9CC;">
           <div class="instr"><span class="kw">FROM</span> base-languages</div>
@@ -449,11 +491,27 @@
           <div class="payload"><b>Git, GitHub, VS Code, Docker, Postman, Jest</b> — version control, testing, containers</div>
         </div>
       </div>
+
+      <div class="findme">
+        <h3>FIND ME ON</h3>
+        <p>Feel free to <span style="color:var(--accent-pink)">connect</span> with me</p>
+        <div class="social-row">
+          <a class="social-icon" href="https://github.com/jomol-1468" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          </a>
+          <a class="social-icon" href="https://linkedin.com/in/jomol-jose-76570233a" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          </a>
+          <a class="social-icon" href="mailto:josejomol0@gmail.com" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="M22 6l-10 7L2 6"/></svg>
+          </a>
+        </div>
+      </div>
     </div>
-  </section>
+  </div>
 
   <!-- PROJECTS -->
-  <section id="projects">
+  <div class="page" id="page-projects">
     <div class="wrap">
       <div class="section-head">
         <h2>WHAT I'VE <span class="accent">BUILT</span></h2>
@@ -511,18 +569,31 @@
 
       </div>
     </div>
-  </section>
+  </div>
 
-  <!-- EXPERIENCE -->
-  <section id="experience">
+  <!-- RESUME -->
+  <div class="page" id="page-resume">
     <div class="wrap">
       <div class="section-head">
-        <h2>MY <span class="accent">EXPERIENCE</span></h2>
+        <h2>MY <span class="accent">RESUME</span></h2>
+        <p class="sub">Experience, education, and everything else — or grab the PDF directly.</p>
       </div>
+
+      <div class="resume-top">
+        <a class="resume-download" href="resume.pdf" download>
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+          Download Resume
+        </a>
+        <a class="resume-view" href="resume.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          View in Browser
+        </a>
+      </div>
+
       <div class="gitlog">
 
         <div class="commit">
-          <div class="hash">a9f3e21 <span class="head">HEAD</span></div>
+          <div class="hash"><span class="head"></span></div>
           <div class="meta">Python Full Stack Developer Intern · Infotact Solutions</div>
           <h3>Full-stack applications, end to end</h3>
           <ul>
@@ -532,7 +603,7 @@
         </div>
 
         <div class="commit">
-          <div class="hash">6c1d087</div>
+          <div class="hash"></div>
           <div class="meta">Python Full Stack Developer Intern · Knovista Technologies</div>
           <h3>Responsive apps, reusable code</h3>
           <ul>
@@ -542,29 +613,21 @@
         </div>
 
         <div class="commit">
-          <div class="hash">2a77c50</div>
+          <div class="hash"></div>
           <div class="meta">2022 – 2025 · B.Tech, Information Technology</div>
           <h3>Government Engineering College, Idukki</h3>
           <p>Graduated with a B.Tech in Information Technology, closing out with portfolio projects instead of a thesis nobody would read twice.</p>
         </div>
 
         <div class="commit">
-          <div class="hash">0000001</div>
+          <div class="hash"></div>
           <div class="meta">2018 – 2021 · root-commit · Diploma, Computer Engineering</div>
           <h3>Government Polytechnic College, Chelakkara</h3>
           <p>Core coursework in programming, data structures, and computer systems that everything since has been built on top of.</p>
         </div>
 
       </div>
-    </div>
-  </section>
 
-  <!-- CERTIFICATIONS + LANGUAGES -->
-  <section id="extra">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>CERTIFICATIONS &amp; <span class="accent">LANGUAGES</span></h2>
-      </div>
       <div class="extra-grid">
         <div class="extra-card">
           <h3>Certifications</h3>
@@ -580,15 +643,19 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- CONTACT -->
-  <section id="contact">
+  <div class="page" id="page-contact">
     <div class="wrap">
+      <div class="section-head">
+        <h2>LET'S <span class="accent">BUILD</span> SOMETHING</h2>
+        <p class="sub">Open to Full Stack Developer roles — Python, Django, React, and AI-integrated backends.</p>
+      </div>
       <div class="contact-panel">
         <div>
-          <h2>Let's <span class="accent">build</span> something.</h2>
-          <p>Open to Full Stack Developer roles — Python, Django, React, and AI-integrated backends. Reach out directly, no recruiter middleman needed.</p>
+          <h2 style="font-size:24px;">Reach out directly</h2>
+          <p>No recruiter middleman needed — email or call works best, or connect on LinkedIn.</p>
         </div>
         <div class="contact-list">
           <div class="contact-row">
@@ -612,7 +679,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
 </main>
 
@@ -621,7 +688,40 @@
 </footer>
 
 <script>
-  // Typewriter effect for the role line
+  // ---- Page routing (no scroll-based nav — nav swaps pages) ----
+  const pages = document.querySelectorAll('.page');
+  const navLinks = document.querySelectorAll('[data-page]');
+  const body = document.body;
+  const navLinksPanel = document.getElementById('navLinks');
+  const navToggle = document.getElementById('navToggle');
+
+  function showPage(id){
+    pages.forEach(p => p.classList.toggle('active', p.id === 'page-' + id));
+    navLinks.forEach(a => {
+      if (a.tagName === 'A' && a.closest('#navLinks')) {
+        a.classList.toggle('active', a.dataset.page === id);
+      }
+    });
+    body.classList.toggle('lock', id === 'home');
+    navLinksPanel.classList.remove('open');
+    window.scrollTo(0, 0);
+  }
+
+  navLinks.forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      showPage(el.dataset.page);
+    });
+  });
+
+  navToggle.addEventListener('click', () => {
+    navLinksPanel.classList.toggle('open');
+  });
+
+  // start locked on home
+  body.classList.add('lock');
+
+  // ---- Typewriter effect ----
   const roles = [
     "Python Full Stack Developer",
     "Django & React Developer",
